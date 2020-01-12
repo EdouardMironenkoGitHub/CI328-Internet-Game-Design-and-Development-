@@ -1,0 +1,146 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 1</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 1024,
+        height: 720,
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+    var cursors;
+    var velocity =0;
+
+    function preload ()
+    {
+	this.load.spritesheet('GameMapTilesetSheet', 
+        'Game Assets and Resources/spritesheet.png',
+        { frameWidth: 16, frameHeight: 16 }
+    );
+
+	this.load.image('GameMapTilesetSheet', 'Game Assets and Resources/spritesheet.png');
+	this.load.image('GameSpriteCarTesla', 'Game Assets and Resources/GameSpriteCarTesla(3).png');
+    }
+
+    function create ()
+    {
+
+	var level = [
+      [  0, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 20 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 15, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 7  ]
+    ]
+
+    // When loading from an array, make sure to specify the tileWidth and tileHeight
+    var map = this.make.tilemap({ data: level, tileWidth: 64, tileHeight: 64 });
+    var tiles = map.addTilesetImage('GameMapTilesetSheet');
+    var layer = map.createStaticLayer(0, tiles, 0, 0);
+
+
+    carsprite = this.add.sprite(300, 400, 'GameSpriteCarTesla');
+    //carsprite = this.physics.add.image(300,400, 'GameSpriteCarTesla');
+    //carsprite.anchor.setTo(0.5, 0.5);
+    //carsprite.scale.setTo(0.125, 0.125);
+    //sprite.scale.set(0.125 , 0.125 );
+    carsprite.displayWidth = 32;
+    carsprite.displayHeight = 64;
+    carsprite.angle = 90;
+   
+    cursors = this.input.keyboard.createCursorKeys();
+    //this.physics.startSystem(Phaser.Physics.P2JS);
+    //this.physics.p2.enable(carsprite);
+
+    //game.physics.enable(carsprite, Phaser.Physics.ARCADE);
+    //game.physics.startSystem(Phaser.Physics.ARCADE);
+    //game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+    }
+
+    function update ()
+    {
+    if (cursors.left.isDown)
+    {
+        carsprite.angle -= 4;
+    }else if (cursors.right.isDown)
+    {
+        carsprite.angle += 4;
+    }
+
+    /*Update Velocity*/
+                if (cursors.up.isDown && velocity <= 40) {
+                        velocity+=7;
+			//carsprite.body.velocity.x = velocity;
+			//carsprite.setAngularVelocity(velocity);
+			//this.carsprite.setAngularVelocity(velocity);
+			// = carsprite.x +velocity;
+ 			//carsprite.body.x =
+			//this.sprite.body.angularVelocity =
+			//carsprite.body.velocity.x = velocity; 
+                }
+                else {
+                    if (velocity >= 0)
+                        velocity = 0;
+			//carsprite.setAngularVelocity(velocity);
+
+                }
+                        
+                /*Set X and Y Speed of Velocity*/
+                //carsprite.body.velocity.x = velocity; //* Math.cos((carsprite.angle-90)*0.01745);
+                //carsprite.body.velocity.y = velocity; //* Math.sin((carsprite.angle-90)*0.01745);
+                //Other velocity of object example code usage 
+		//carsprite.body.velocity.x = 0
+
+	//game.physics.moveToPointer(carsprite,300,game.input.activePointer);
+
+
+    //carsprite.body.velocity.x = 0;
+    //carsprite.body.velocity.y = 0;
+    //carsprite.body.angularVelocity = 0;
+
+    //if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+    //{
+    //    carsprite.body.angularVelocity = -200;
+    //}
+    //else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+    //{
+    //    carsprite.body.angularVelocity = 200;
+    //}
+
+    //if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    //{
+        //game.physics.arcade.velocityFromAngle(carsprite.angle, 300, carsprite.body.velocity);
+    //}
+	
+ 
+    }
+
+</script>
+</body>
+</html>
