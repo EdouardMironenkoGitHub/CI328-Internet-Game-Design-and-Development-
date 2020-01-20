@@ -1,0 +1,230 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Driving Simulator Game Project</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.21.0/dist/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+	
+        width: 1024,
+        height: 720,
+	physics: {
+            default: 'arcade',
+            arcade: {
+                fps:60,
+		gravity: {y:0}	
+        }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+    var cursors;
+    var velocity =0;
+    var carsprite;
+    var temporaryanglevaluestorage = 0; //
+    var temporaryanglevalueradians = 0;
+
+    function preload ()
+    {
+
+	//var camera = scene.cameras.main;
+
+
+
+	this.load.spritesheet('GameMapTilesetSheet', 
+        'Game Assets and Resources/spritesheet.png',
+        { frameWidth: 64, frameHeight: 64 }
+    );
+
+	this.load.image('GameMapTilesetSheet', 'Game Assets and Resources/spritesheet.png');
+	this.load.image('GameSpriteCarTesla', 'Game Assets and Resources/GameSpriteCarTesla(3).png');
+    }
+
+    function create ()
+    {
+
+	var level = [
+      [  0, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 20 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 14, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 22 ],
+      [  6, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 6  ],
+      [ 15, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 7  ]
+    ]
+
+    // When loading from an array, make sure to specify the tileWidth and tileHeight
+    var map = this.make.tilemap({ data: level, tileWidth: 64, tileHeight: 64});
+    var tiles = map.addTilesetImage('GameMapTilesetSheet');
+    var layer = map.createStaticLayer(0, tiles, 0, 0).setScale(2);
+    
+    //this.physics.startSystem(Phaser.Physics.P2JS);
+    carsprite = this.physics.add.sprite(300,400, "GameSpriteCarTesla");
+    //carsprite = this.add.sprite(300, 400, 'GameSpriteCarTesla');
+    //carsprite = this.physics.add.image(300,400, 'GameSpriteCarTesla');
+    //carsprite.anchor.setTo(0.5, 0.5);
+    //carsprite.scale.setTo(0.125, 0.125);
+    //sprite.scale.set(0.125 , 0.125 );
+    carsprite.displayWidth = 32;
+    carsprite.displayHeight = 64;
+    //carsprite.angle = 90;
+
+    //carsprite.setDamping(true);
+    //carsprite.setDrag(0.99);
+    //carsprite.setMaxVelocity(200);
+   
+    cursors = this.input.keyboard.createCursorKeys();
+    //this.physics.startSystem(Phaser.Physics.P2JS);
+    //this.physics.p2.enable(carsprite);
+    //game.physics.enable(carsprite, Phaser.Physics.ARCADE);
+    //game.physics.startSystem(Phaser.Physics.ARCADE);
+    //game.physics.enable(sprite, Phaser.Physics.ARCADE);
+
+    
+    this.cameras.main.startFollow(carsprite, true, 0.05, 0.05);
+
+
+//    this.matter.add.fromVertices(408, 492, verts, { ignoreGravity: true }, true, 0.01, //10);
+
+//this.isDrawing = true;
+    }
+
+    function update ()
+    {
+    if (cursors.left.isDown)
+    {
+        carsprite.angle -= 4;
+	//carsprite.angle = carsprite.body.angle;
+	//console.log(carsprite.angle);
+    }else if (cursors.right.isDown)
+    {
+        carsprite.angle += 4;
+	//carsprite.angle = carsprite.body.angle;
+	//console.log(carsprite.angle);
+    }
+
+
+temporaryanglevaluestorage = carsprite.angle;
+
+if(carsprite.angle < 0) {
+				temporaryanglevaluestorage =  (180 + carsprite.angle) +180; 
+			}
+
+console.log(temporaryanglevaluestorage);
+
+//temporaryanglevalueradians = temporaryanglevaluestorage/360*3.14;
+
+//console.log(carsprite.angle + " " + temporaryanglevaluestorage + "sin(temporaryanglevaluestorage):" + Math.cos//(temporaryanglevaluestorage) + "cos(temporaryanglevaluestorage):" + Math.sin(temporaryanglevaluestorage));
+    
+                if (cursors.up.isDown ) {
+			if (velocity < 40){
+			velocity = velocity +4;
+
+		
+			}
+
+			
+			//carsprite.setVelocityX(Math.cos(temporaryanglevaluestorage)*velocity);
+			//carsprite.setVelocityY(Math.sin(temporaryanglevaluestorage)*velocity);
+
+			//POTENTIALLY IS DANGEROUSLY INCORRECT 
+			//carsprite.setVelocityX(Math.cos(carsprite.angle -90) *0.01745 * velocity);
+			//carsprite.setVelocityY(Math.sin(carsprite.angle -90) *0.01745 * velocity);
+
+			//carsprite.body.velocity.x = Math.cos(temporaryanglevaluestorage)*velocity
+
+			//carsprite.body.acceleration.x = Math.cos			
+			//((temporaryanglevaluestorage/3.14)*360)*1000;
+			//			carsprite.body.acceleration.y = Math.sin
+			//((temporaryanglevaluestorage/3.14)*360)*1000;
+	
+		//carsprite.body.acceleration.x=Math.cos(temporaryanglevaluestorage/360 *3.14)*1000;
+ 		//carsprite.body.acceleration.y=Math.sin(temporaryanglevaluestorage/360 *3.14)*1000;
+
+		//carsprite.body.acceleration.x = 100;
+
+		//carsprite.setVelocityX(100);
+		//carsprite.setVelocityY(100);
+
+		//player.rotation
+
+		//carsprite.rotation
+
+		carsprite.body.acceleration.x = Math.cos(carsprite.rotation-((3/2)*Math.PI))*100;
+		carsprite.body.acceleration.y = Math.sin(carsprite.rotation-((3/2)*Math.PI))*100;
+
+                }
+                else {
+			velocity = 0;
+			carsprite.body.acceleration.x = 0;
+			carsprite.body.acceleration.y = 0;
+			carsprite.body.velocity.x = 0;
+			carsprite.body.velocity.y = 0;
+
+
+                }
+
+//if (cursors.up.isDown)
+//    {
+//        this.camera.y -= 4;
+//    }
+//    else if (cursors.down.isDown)
+//    {
+//        this.camera.y += 4;
+//    }
+//    if (cursors.left.isDown)
+//    {
+//        this.camera.x -= 4;
+//    }
+//    else if (cursors.right.isDown)
+//    {
+//        this.camera.x += 4;
+//    }
+
+//graphics.lineStyle(5, 0xFF00FF, 1.0);
+//graphics.beginPath();
+//graphics.moveTo(100, 100);
+//graphics.lineTo(200, 200);
+//graphics.closePath();
+//graphics.strokePath();
+//	this.add.line(
+//            carsprite.x,
+//            carsprite.y,
+//            carsprite.x + Math.cos(temporaryanglevaluestorage)*velocity,
+//            carsprite.y + Math.sin(temporaryanglevaluestorage)*velocity,
+//            100,
+//            100,
+//            0xff0000
+//        )
+//
+		console.log(carsprite.rotation);
+
+//camera.centerOn(100, 100);
+	
+ 
+    }
+
+</script>
+</body>
+</html>
